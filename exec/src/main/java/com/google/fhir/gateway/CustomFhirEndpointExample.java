@@ -50,60 +50,60 @@ import org.slf4j.LoggerFactory;
 @WebServlet("/myPatients")
 public class CustomFhirEndpointExample extends HttpServlet {
 
-  private static final Logger logger = LoggerFactory.getLogger(CustomFhirEndpointExample.class);
-  private final TokenVerifier tokenVerifier;
-
-  private final HttpFhirClient fhirClient;
-
-  public CustomFhirEndpointExample() throws IOException {
-    this.tokenVerifier = TokenVerifier.createFromEnvVars();
-    this.fhirClient = FhirClientFactory.createFhirClientFromEnvVars();
-  }
-
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    // Check the Bearer token to be a valid JWT with required claims.
-    String authHeader = request.getHeader("Authorization");
-    if (authHeader == null) {
-      throw new ServletException("No Authorization header provided!");
-    }
-    List<String> patientIds = new ArrayList<>();
-    // Note for a more meaningful HTTP status code, we can catch AuthenticationException in:
-    DecodedJWT jwt = tokenVerifier.decodeAndVerifyBearerToken(authHeader);
-    Claim claim = jwt.getClaim("patient_list");
-    if (claim.asString() != null) {
-      logger.info("Found a 'patient_list' claim: {}", claim);
-      String listUri = "List/" + claim.asString();
-      HttpResponse fhirResponse = fhirClient.getResource(listUri);
-      HttpUtil.validateResponseOrFail(fhirResponse, listUri);
-      if (fhirResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-        logger.error("Error while fetching {}", listUri);
-        response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        return;
-      }
-      FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.R4);
-      IParser jsonParser = fhirContext.newJsonParser();
-      IBaseResource resource = jsonParser.parseResource(fhirResponse.getEntity().getContent());
-      ListResource listResource = (ListResource) resource;
-      for (ListEntryComponent entry : listResource.getEntry()) {
-        patientIds.add(entry.getItem().getReference());
-      }
-    } else {
-      claim = jwt.getClaim("patient_id");
-      if (claim.asString() != null) {
-        logger.info("Found a 'patient_id' claim: {}", claim);
-        patientIds.add(claim.asString());
-      }
-    }
-    if (claim.asString() == null) {
-      String error = "Found no patient claim in the token!";
-      logger.error(error);
-      response.getOutputStream().print(error);
-      response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-      return;
-    }
-    response.getOutputStream().print("Your patient are: " + String.join(" ", patientIds));
-    response.setStatus(HttpStatus.SC_OK);
-  }
+//  private static final Logger logger = LoggerFactory.getLogger(CustomFhirEndpointExample.class);
+//  private final TokenVerifier tokenVerifier;
+//
+//  private final HttpFhirClient fhirClient;
+//
+//  public CustomFhirEndpointExample() throws IOException {
+//    this.tokenVerifier = TokenVerifier.createFromEnvVars();
+//    this.fhirClient = FhirClientFactory.createFhirClientFromEnvVars();
+//  }
+//
+//  @Override
+//  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//      throws ServletException, IOException {
+//    // Check the Bearer token to be a valid JWT with required claims.
+//    String authHeader = request.getHeader("Authorization");
+//    if (authHeader == null) {
+//      throw new ServletException("No Authorization header provided!");
+//    }
+//    List<String> patientIds = new ArrayList<>();
+//    // Note for a more meaningful HTTP status code, we can catch AuthenticationException in:
+//    DecodedJWT jwt = tokenVerifier.decodeAndVerifyBearerToken(authHeader);
+//    Claim claim = jwt.getClaim("patient_list");
+//    if (claim.asString() != null) {
+//      logger.info("Found a 'patient_list' claim: {}", claim);
+//      String listUri = "List/" + claim.asString();
+//      HttpResponse fhirResponse = fhirClient.getResource(listUri);
+//      HttpUtil.validateResponseOrFail(fhirResponse, listUri);
+//      if (fhirResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+//        logger.error("Error while fetching {}", listUri);
+//        response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+//        return;
+//      }
+//      FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.R4);
+//      IParser jsonParser = fhirContext.newJsonParser();
+//      IBaseResource resource = jsonParser.parseResource(fhirResponse.getEntity().getContent());
+//      ListResource listResource = (ListResource) resource;
+//      for (ListEntryComponent entry : listResource.getEntry()) {
+//        patientIds.add(entry.getItem().getReference());
+//      }
+//    } else {
+//      claim = jwt.getClaim("patient_id");
+//      if (claim.asString() != null) {
+//        logger.info("Found a 'patient_id' claim: {}", claim);
+//        patientIds.add(claim.asString());
+//      }
+//    }
+//    if (claim.asString() == null) {
+//      String error = "Found no patient claim in the token!";
+//      logger.error(error);
+//      response.getOutputStream().print(error);
+//      response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+//      return;
+//    }
+//    response.getOutputStream().print("Your patient are: " + String.join(" ", patientIds));
+//    response.setStatus(HttpStatus.SC_OK);
+//  }
 }

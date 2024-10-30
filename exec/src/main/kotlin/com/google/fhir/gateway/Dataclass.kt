@@ -37,6 +37,7 @@ data class DbUser(
 enum class FHIRResourceTypesData {
     PATIENT,
     IMMUNIZATION,
+    IMMUNIZATION_RECOMMENDATION,
     MEDICATION,
     ORDER
 }

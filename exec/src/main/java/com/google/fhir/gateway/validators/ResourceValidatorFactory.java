@@ -17,6 +17,8 @@ public class ResourceValidatorFactory {
              resourceTypeData = FHIRResourceTypesData.PATIENT.name();
         } else if (Objects.equals(resourceType, "Immunization")) {
             resourceTypeData = FHIRResourceTypesData.IMMUNIZATION.name();
+        } else if (Objects.equals(resourceType, "ImmunizationRecommendation")) {
+            resourceTypeData = FHIRResourceTypesData.IMMUNIZATION_RECOMMENDATION.name();
         }else {
             resourceTypeData = resourceType;
         }
@@ -24,6 +26,8 @@ public class ResourceValidatorFactory {
         if (Objects.equals(resourceTypeData, FHIRResourceTypesData.PATIENT.name())){
             return new PatientResourceValidator();
         }else if (Objects.equals(resourceTypeData, FHIRResourceTypesData.IMMUNIZATION.name())){
+            return new ImmunizationResourceValidator();
+        }else if (Objects.equals(resourceTypeData, FHIRResourceTypesData.IMMUNIZATION_RECOMMENDATION.name())){
             return new ImmunizationResourceValidator();
         }else {
             return null; // or throw an exception here depending on your needs.
