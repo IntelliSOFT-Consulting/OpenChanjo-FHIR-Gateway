@@ -2,6 +2,7 @@ package com.google.fhir.gateway.resource_validators;
 
 import com.google.fhir.gateway.ApiServiceImpl;
 import com.google.fhir.gateway.FormatterClass;
+import com.google.fhir.gateway.OpenChanjoRoles;
 import com.google.fhir.gateway.interfaces.*;
 import com.google.fhir.gateway.validators.ResourceRoleValidator;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,10 +16,10 @@ public class ImmunizationResourceValidator implements AccessChecker, ResourceVal
     private final FormatterClass formatter = new FormatterClass();
 
     // Define allowed roles for different operations
-    private final Set<String> createAllowedRoles = Set.of("NURSE", "DOCTOR");
-    private final Set<String> updateAllowedRoles = Set.of("NURSE", "DOCTOR");
-    private final Set<String> deleteAllowedRoles = Set.of("NURSE", "DOCTOR");
-    private final Set<String> testAllowedRoles = Set.of("FACILITY_SYSTEM_ADMINISTRATOR");
+    private final Set<String> createAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> updateAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> deleteAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> testAllowedRoles = Set.of(OpenChanjoRoles.FACILITY_SYSTEM_ADMINISTRATOR.name());
 
     // Instantiate role validators dynamically
     private final RoleValidator createResourceRoleValidator = new ResourceRoleValidator(createAllowedRoles);

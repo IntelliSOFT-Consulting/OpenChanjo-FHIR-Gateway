@@ -10,25 +10,26 @@ import retrofit2.Call;
 
 import java.util.Set;
 
-public class PatientResourceValidator implements AccessChecker, ResourceValidator {
+public class AuditEventResourceValidator implements AccessChecker, ResourceValidator {
 
     private final ApiServiceImpl apiService = new ApiServiceImpl();
     private final FormatterClass formatter = new FormatterClass();
 
     // Define allowed roles for different operations
-    private final Set<String> createAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name(), OpenChanjoRoles.CLERK.name());
-    private final Set<String> updateAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
-    private final Set<String> deleteAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> createAllowedRoles = Set.of(OpenChanjoRoles.SUB_COUNTY_STORE_MANAGER.name());
+    private final Set<String> updateAllowedRoles = Set.of(OpenChanjoRoles.SUB_COUNTY_STORE_MANAGER.name());
+    private final Set<String> deleteAllowedRoles = Set.of(OpenChanjoRoles.SUB_COUNTY_STORE_MANAGER.name());
+    private final Set<String> getAllowedRoles = Set.of(OpenChanjoRoles.SUB_COUNTY_STORE_MANAGER.name());
+
     private final Set<String> testAllowedRoles = Set.of(OpenChanjoRoles.FACILITY_SYSTEM_ADMINISTRATOR.name());
 
     // Instantiate role validators dynamically
     private final RoleValidator createResourceRoleValidator = new ResourceRoleValidator(createAllowedRoles);
     private final RoleValidator updateResourceRoleValidator = new ResourceRoleValidator(updateAllowedRoles);
     private final RoleValidator deleteResourceRoleValidator = new ResourceRoleValidator(deleteAllowedRoles);
+    private final RoleValidator getResourceRoleValidator = new ResourceRoleValidator(getAllowedRoles);
     private final RoleValidator testResourceRoleValidator = new ResourceRoleValidator(testAllowedRoles);
+
 
 
     @Override
@@ -36,9 +37,11 @@ public class PatientResourceValidator implements AccessChecker, ResourceValidato
         return null;
     }
 
-
     @Override
     public Call<Object> getResource(String role, String targetUrl) {
+        if (!getResourceRoleValidator.hasAccess(role)) {
+            return null; // Return null if access is denied
+        }
         return apiService.getResource(targetUrl);
     }
 
@@ -65,4 +68,5 @@ public class PatientResourceValidator implements AccessChecker, ResourceValidato
         }
         return apiService.deleteResource(targetUrl);
     }
+
 }
