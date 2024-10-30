@@ -2,10 +2,7 @@ package com.google.fhir.gateway.validators;
 
 import com.google.fhir.gateway.FHIRResourceTypesData;
 import com.google.fhir.gateway.interfaces.ResourceValidator;
-import com.google.fhir.gateway.resource_validators.AuditEventResourceValidator;
-import com.google.fhir.gateway.resource_validators.BasicResourceValidator;
-import com.google.fhir.gateway.resource_validators.ImmunizationResourceValidator;
-import com.google.fhir.gateway.resource_validators.PatientResourceValidator;
+import com.google.fhir.gateway.resource_validators.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -25,6 +22,8 @@ public class ResourceValidatorFactory {
                 return new BasicResourceValidator();
             case "AuditEvent":
                 return new AuditEventResourceValidator();
+            case "Library":
+                return new LibraryResourceValidator();
             default:
                 throw new IllegalArgumentException("Unknown resource type: " + resourceType);
         }
