@@ -33,3 +33,10 @@ data class DbUser(
     val country: String,
     val countryName: String
 )
+
+enum class FHIRResourceTypesData {
+    PATIENT,
+    IMMUNIZATION,
+    MEDICATION,
+    ORDER
+}

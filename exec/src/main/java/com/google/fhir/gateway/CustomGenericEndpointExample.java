@@ -25,12 +25,15 @@ import java.util.Enumeration;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.fhir.gateway.interfaces.ResourceValidator;
+import com.google.fhir.gateway.validators.PatientResourceValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -48,6 +51,8 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
   private String BASE_URL_FHIR = "chanjo-hapi/fhir/";
   private String BASE_URL_AUTH = "auth/";
+
+  private final ResourceValidatorFactory validatorFactory = new ResourceValidatorFactory();
 
 
   public CustomGenericEndpointExample() throws IOException {
@@ -116,61 +121,69 @@ public class CustomGenericEndpointExample extends HttpServlet {
         String fhirPractitionerId = dbUser.getFhirPractitionerId();
         String facility = dbUser.getFacility();
 
-        System.out.println("Practitioner Role: " + practitionerRole);
-        System.out.println("Practitioner FHIR ID: " + fhirPractitionerId);
-        System.out.println("Facility: " + facility);
-
         try{
 
           String path = req.getRequestURI().substring(req.getContextPath().length() + "/chanjo-gateway/".length());
           String queryString = req.getQueryString() != null ? "?" + req.getQueryString() : "";
           String targetUrl = BASE_URL_FHIR + path + queryString;
 
-          Call<Object> call = null;
-          switch (method) {
-            case "GET":
-              call = apiService.getResource(targetUrl);
-              break;
-            case "POST":
-              call = apiService.createResource(targetUrl, readRequestBody(req));
-              break;
-            case "PUT":
-              call = apiService.updateResource(targetUrl, readRequestBody(req));
-              break;
-            case "DELETE":
-              call = apiService.deleteResource(targetUrl);
-              break;
-            default:
-          }
+          String resourceType = path.split("/")[0];
 
+          ResourceValidator resourceValidator = validatorFactory.getValidator(resourceType);
 
-          if (call != null) {
-            Response<Object> response = call.execute();
-            int statusCodeRes = response.code();
+          if (resourceValidator != null){
 
-            if (response.isSuccessful()) {
-              statusCode = HttpServletResponse.SC_OK;
-              dbResults = new DbResults(response.body());
+            Call<Object> call = null;
+            switch (method) {
+              case "GET":
+                call = resourceValidator.getResource(practitionerRole, targetUrl);
+                break;
+              case "POST":
+                call = resourceValidator.createResource(practitionerRole, targetUrl, req);
+                break;
+              case "PUT":
+                call = resourceValidator.updateResource(practitionerRole, targetUrl, req);
+                break;
+              case "DELETE":
+                call = resourceValidator.deleteResource(practitionerRole, targetUrl);
+                break;
+              default:
+            }
 
-            } else {
+            if (call == null) {
+              statusCode = HttpServletResponse.SC_UNAUTHORIZED;
+              String responseString = "The resource does not exist or you do not have access to it.";
+              dbResults = new DbResults(responseString);
+            }else {
 
-              if (statusCodeRes == 404){
+              Response<Object> response = call.execute();
+              int statusCodeRes = response.code();
 
-                statusCode = HttpServletResponse.SC_NOT_FOUND;
-                String responseString = "Resource not found";
-                dbResults = new DbResults(responseString);
+              if (response.isSuccessful()) {
+                statusCode = HttpServletResponse.SC_OK;
+                dbResults = new DbResults(response.body());
 
-              }else {
+              } else {
 
-                String responseString = "Check the request and try again";
-                dbResults = new DbResults(responseString);
+                if (statusCodeRes == 404){
+
+                  statusCode = HttpServletResponse.SC_NOT_FOUND;
+                  String responseString = "Resource not found";
+                  dbResults = new DbResults(responseString);
+
+                }else {
+
+                  String responseString = "Check the request and try again";
+                  dbResults = new DbResults(responseString);
+
+                }
 
               }
 
             }
 
           }else {
-            String responseString = "Error while forwarding request";
+            String responseString =  "Check the request and try again";
             dbResults = new DbResults(responseString);
           }
 
