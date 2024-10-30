@@ -1,8 +1,9 @@
-package com.google.fhir.gateway;
+package com.google.fhir.gateway.validators;
 
+import com.google.fhir.gateway.FHIRResourceTypesData;
 import com.google.fhir.gateway.interfaces.ResourceValidator;
-import com.google.fhir.gateway.validators.ImmunizationResourceValidator;
-import com.google.fhir.gateway.validators.PatientResourceValidator;
+import com.google.fhir.gateway.resource_validators.ImmunizationResourceValidator;
+import com.google.fhir.gateway.resource_validators.PatientResourceValidator;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;

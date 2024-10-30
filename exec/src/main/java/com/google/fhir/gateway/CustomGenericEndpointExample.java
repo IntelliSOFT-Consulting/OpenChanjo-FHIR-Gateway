@@ -19,21 +19,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Enumeration;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.fhir.gateway.interfaces.ResourceValidator;
-import com.google.fhir.gateway.validators.PatientResourceValidator;
+import com.google.fhir.gateway.validators.ResourceValidatorFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -151,8 +147,8 @@ public class CustomGenericEndpointExample extends HttpServlet {
             }
 
             if (call == null) {
-              statusCode = HttpServletResponse.SC_UNAUTHORIZED;
-              String responseString = "The resource does not exist or you do not have access to it.";
+              statusCode = HttpServletResponse.SC_FORBIDDEN;
+              String responseString = "You do not have access to this resource.";
               dbResults = new DbResults(responseString);
             }else {
 
