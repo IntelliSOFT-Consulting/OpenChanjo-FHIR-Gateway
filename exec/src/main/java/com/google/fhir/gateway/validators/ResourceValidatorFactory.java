@@ -24,6 +24,24 @@ public class ResourceValidatorFactory {
                 return new AuditEventResourceValidator();
             case "Library":
                 return new LibraryResourceValidator();
+            case "Parameters":
+                return new ParametersResourceValidator();
+            case "SupplyDelivery":
+                return new SupplyDeliveryResourceValidator();
+            case "SupplyRequest":
+                return new SupplyRequestResourceValidator();
+            case "Observation":
+                return new ObservationResourceValidator();
+            case "AdverseEvent":
+                return new AdverseEventResourceValidator();
+            case "Appointment":
+                return new AppointmentResourceValidator();
+            case "CarePlan":
+                return new CarePlanResourceValidator();
+            case "Location":
+                return new LocationResourceValidator();
+            case "Practitioner":
+                return new PractionerResourceValidator();
             default:
                 throw new IllegalArgumentException("Unknown resource type: " + resourceType);
         }
