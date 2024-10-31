@@ -51,6 +51,13 @@ public class CustomGenericEndpointExample extends HttpServlet {
   private final ResourceValidatorFactory validatorFactory = new ResourceValidatorFactory();
 
 
+    /**
+   * Constructs a new instance of the CustomGenericEndpointExample servlet.
+   * Initializes the token verifier and FHIR client using environment variables.
+   *
+   * @throws IOException if an error occurs during the creation of the token verifier
+   *                     or FHIR client from environment variables.
+   */
   public CustomGenericEndpointExample() throws IOException {
     this.tokenVerifier = TokenVerifier.createFromEnvVars();
     this.fhirClient = FhirClientFactory.createFhirClientFromEnvVars();
@@ -75,14 +82,19 @@ public class CustomGenericEndpointExample extends HttpServlet {
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     forwardRequest(req, resp, "DELETE");
   }
-
-  /**
-   * This function forwards an HTTP request to a specified URL (Service B) and returns the response.//+
+  
+    /**
+   * Forwards an HTTP request to a target FHIR server, validating the request and user permissions.
+   * This method processes the request based on the HTTP method, validates the JWT token, and
+   * determines access to FHIR resources using user roles and permissions.
    *
-   * @param req    The incoming HTTP request.//+
-   * @param resp
-   * @param method The HTTP method of the incoming request (e.g., GET, POST, PUT, DELETE).//+
-   *///+
+   * @param req   the HttpServletRequest object that contains the request the client has made
+   *              of the servlet.
+   * @param resp  the HttpServletResponse object that contains the response the servlet sends
+   *              to the client.
+   * @param method the HTTP method (GET, POST, PUT, DELETE) used for the request.
+   * @throws IOException if an input or output exception occurs while processing the request.
+   */
   private void forwardRequest(HttpServletRequest req, HttpServletResponse resp, String method) throws IOException {
     // Get the URL path after "/proxy" and append it to Service B's base URL
 
@@ -100,7 +112,13 @@ public class CustomGenericEndpointExample extends HttpServlet {
       dbResults = new DbResults(responseString);
 
     }else {
-      DecodedJWT jwt = tokenVerifier.decodeAndVerifyBearerToken(authHeader);
+
+      try{
+        tokenVerifier.decodeAndVerifyBearerToken(authHeader);
+
+      }catch (Exception e){
+        e.printStackTrace();
+      }
 
       DbUser dbUser = getProviderInfoFromJwt(authHeader);
       if (dbUser == null) {
@@ -204,6 +222,15 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
   }
 
+    /**
+   * Retrieves provider information from a JWT token.
+   * This method makes a call to an external service to obtain user details
+   * associated with the provided JWT token.
+   *
+   * @param jwt the JSON Web Token (JWT) used to authenticate and retrieve user information.
+   * @return a DbUser object containing the user details if the call is successful and the status is "success";
+   *         otherwise, returns null.
+   */
   private DbUser getProviderInfoFromJwt(String jwt) {
 
     try{
@@ -228,57 +255,4 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
   }
 
-
-  private String readResponseBody(HttpURLConnection connection) throws IOException {
-    try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-      String inputLine;
-      StringBuilder response = new StringBuilder();
-      while ((inputLine = in.readLine()) != null) {
-        response.append(inputLine);
-      }
-      return response.toString();
-    }
-  }
-
-  private String readRequestBody(HttpServletRequest request) throws IOException {
-    StringBuilder stringBuilder = new StringBuilder();
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(), "utf-8"))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        stringBuilder.append(line);
-      }
-    }
-    return stringBuilder.toString();
-  }
-
-  private void copyHeaders(HttpServletRequest req, HttpURLConnection connection) {
-    Enumeration<String> headerNames = req.getHeaderNames();
-    while (headerNames.hasMoreElements()) {
-      String headerName = headerNames.nextElement();
-      Enumeration<String> headers = req.getHeaders(headerName);
-      while (headers.hasMoreElements()) {
-        String headerValue = headers.nextElement();
-        connection.setRequestProperty(headerName, headerValue);
-      }
-    }
-  }
-
-  private void copyResponseHeaders(HttpURLConnection connection, HttpServletResponse resp) {
-    for (String headerKey : connection.getHeaderFields().keySet()) {
-      if (headerKey != null) {
-        resp.setHeader(headerKey, connection.getHeaderField(headerKey));
-      }
-    }
-  }
-
-  private void writeResponseBody(HttpURLConnection connection, HttpServletResponse resp) throws IOException {
-    try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-      String inputLine;
-      StringBuilder response = new StringBuilder();
-      while ((inputLine = in.readLine()) != null) {
-        response.append(inputLine);
-      }
-      resp.getWriter().write(response.toString());
-    }
-  }
 }

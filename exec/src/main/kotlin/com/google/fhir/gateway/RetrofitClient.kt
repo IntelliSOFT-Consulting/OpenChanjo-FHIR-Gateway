@@ -3,6 +3,13 @@ package com.google.fhir.gateway
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * A client for creating and managing a Retrofit instance configured with a base URL and a Gson converter.
+ *
+ * @property BASE_URL The base URL for the API endpoints.
+ * @property retrofit The Retrofit instance configured with the base URL and Gson converter.
+ * @property apiService The API service interface created from the Retrofit instance.
+ */
 class RetrofitClient {
 
     private val BASE_URL = "https://openchanjotest.intellisoftkenya.com/"

@@ -42,11 +42,28 @@ public class AppointmentResourceValidator implements AccessChecker, ResourceVali
 
 
 
+        /**
+     * Checks access permissions for a given request.
+     *
+     * @param requestDetails the details of the request to be checked for access permissions.
+     *                       This includes information such as the request method, headers, and other relevant data.
+     * @return an AccessDecision object representing the decision on whether access is granted or denied.
+     *         Currently, this method returns null, indicating that no access decision is made.
+     */
     @Override
     public AccessDecision checkAccess(RequestDetailsReader requestDetails) {
         return null;
     }
 
+        /**
+     * Retrieves a resource from the specified target URL if the role has access permissions.
+     *
+     * @param role      the role of the user requesting the resource. This determines if the user has
+     *                  the necessary permissions to access the resource.
+     * @param targetUrl the URL of the resource to be retrieved.
+     * @return a Call object representing the request to retrieve the resource. Returns null if the
+     *         role does not have access permissions.
+     */
     @Override
     public Call<Object> getResource(String role, String targetUrl) {
         if (!getResourceRoleValidator.hasAccess(role)) {
@@ -55,6 +72,16 @@ public class AppointmentResourceValidator implements AccessChecker, ResourceVali
         return apiService.getResource(targetUrl);
     }
 
+        /**
+     * Creates a resource at the specified target URL if the role has access permissions.
+     *
+     * @param role        the role of the user attempting to create the resource. This determines if the user
+     *                    has the necessary permissions to perform the creation operation.
+     * @param targetUrl   the URL where the resource is to be created.
+     * @param requestBody the HTTP request body containing the data for the resource to be created.
+     * @return a Call object representing the request to create the resource. Returns null if the role
+     *         does not have access permissions.
+     */
     @Override
     public Call<Object> createResource(String role, String targetUrl, HttpServletRequest requestBody) {
         if (!createResourceRoleValidator.hasAccess(role)) {

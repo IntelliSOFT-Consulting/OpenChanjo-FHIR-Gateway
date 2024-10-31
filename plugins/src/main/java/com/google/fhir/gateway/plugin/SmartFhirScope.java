@@ -27,7 +27,7 @@ import lombok.Getter;
 /**
  * This class models the SMART-on-FHIR permission scopes that are meant ot be used for accessing
  * clinical data. The constraints in this class are according to the official guidelines here:
- * https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data
+ * <a href="https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data">...</a>
  */
 @Getter
 public class SmartFhirScope {

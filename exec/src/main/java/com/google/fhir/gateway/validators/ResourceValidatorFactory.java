@@ -16,8 +16,9 @@ public class ResourceValidatorFactory {
             case "Patient":
                 return new PatientResourceValidator();
             case "Immunization":
-            case "ImmunizationRecommendation":
                 return new ImmunizationResourceValidator();
+            case "ImmunizationRecommendation":
+                return new ImmunizationRecommendationResourceValidator();
             case "Basic":
                 return new BasicResourceValidator();
             case "AuditEvent":

@@ -10,35 +10,21 @@ import retrofit2.Call;
 
 import java.util.Set;
 
-/**
- * This class implements the AccessChecker and ResourceValidator interfaces to validate and access AdverseEvent resources.
- * It uses role-based access control to determine whether a user has permission to perform specific operations on the resources.
- *
- * @author David Njau
- * @version 1.0
- * @since 2023-01-01
- */
-public class AdverseEventResourceValidator implements AccessChecker, ResourceValidator {
+public class ImmunizationRecommendationResourceValidator implements AccessChecker, ResourceValidator {
 
     private final ApiServiceImpl apiService = new ApiServiceImpl();
     private final FormatterClass formatter = new FormatterClass();
 
     // Define allowed roles for different operations
-    private final Set<String> createAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name()
-    );
-    private final Set<String> updateAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name()
-    );
-    private final Set<String> deleteAllowedRoles = Set.of(
-            OpenChanjoRoles.NURSE.name()
-    );
+    private final Set<String> createAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> updateAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
+    private final Set<String> deleteAllowedRoles = Set.of(OpenChanjoRoles.NURSE.name(), OpenChanjoRoles.DOCTOR.name());
     private final Set<String> getAllowedRoles = Set.of(
             OpenChanjoRoles.NURSE.name(),
+            OpenChanjoRoles.DOCTOR.name(),
             OpenChanjoRoles.ADMINISTRATOR.name(),
             OpenChanjoRoles.NATIONAL_SYSTEM_ADMINISTRATOR.name()
     );
-
     private final Set<String> testAllowedRoles = Set.of(OpenChanjoRoles.FACILITY_SYSTEM_ADMINISTRATOR.name());
 
     // Instantiate role validators dynamically
@@ -55,14 +41,6 @@ public class AdverseEventResourceValidator implements AccessChecker, ResourceVal
         return null;
     }
 
-    /**
-     * Retrieves an AdverseEvent resource from the specified target URL.
-     *
-     * @param role The user's role.
-     * @param targetUrl The URL of the AdverseEvent resource to retrieve.
-     * @return A Retrofit Call object representing the asynchronous HTTP request to retrieve the resource.
-     *         If access is denied, returns null.
-     */
     @Override
     public Call<Object> getResource(String role, String targetUrl) {
         if (!getResourceRoleValidator.hasAccess(role)) {
@@ -71,15 +49,6 @@ public class AdverseEventResourceValidator implements AccessChecker, ResourceVal
         return apiService.getResource(targetUrl);
     }
 
-    /**
-     * Creates a new AdverseEvent resource at the specified target URL.
-     *
-     * @param role The user's role.
-     * @param targetUrl The URL where the new AdverseEvent resource will be created.
-     * @param requestBody The request body containing the details of the new AdverseEvent resource.
-     * @return A Retrofit Call object representing the asynchronous HTTP request to create the resource.
-     *         If access is denied, returns null.
-     */
     @Override
     public Call<Object> createResource(String role, String targetUrl, HttpServletRequest requestBody) {
         if (!createResourceRoleValidator.hasAccess(role)) {
@@ -88,15 +57,6 @@ public class AdverseEventResourceValidator implements AccessChecker, ResourceVal
         return apiService.createResource(targetUrl, formatter.readRequestBody(requestBody));
     }
 
-    /**
-     * Updates an existing AdverseEvent resource at the specified target URL.
-     *
-     * @param role The user's role.
-     * @param targetUrl The URL of the AdverseEvent resource to update.
-     * @param requestBody The request body containing the updated details of the AdverseEvent resource.
-     * @return A Retrofit Call object representing the asynchronous HTTP request to update the resource.
-     *         If access is denied, returns null.
-     */
     @Override
     public Call<Object> updateResource(String role, String targetUrl, HttpServletRequest requestBody) {
         if (!updateResourceRoleValidator.hasAccess(role)) {
@@ -105,14 +65,6 @@ public class AdverseEventResourceValidator implements AccessChecker, ResourceVal
         return apiService.updateResource(targetUrl, formatter.readRequestBody(requestBody));
     }
 
-    /**
-     * Deletes an AdverseEvent resource from the specified target URL.
-     *
-     * @param role The user's role.
-     * @param targetUrl The URL of the AdverseEvent resource to delete.
-     * @return A Retrofit Call object representing the asynchronous HTTP request to delete the resource.
-     *         If access is denied, returns null.
-     */
     @Override
     public Call<Object> deleteResource(String role, String targetUrl) {
         if (!deleteResourceRoleValidator.hasAccess(role)) {
