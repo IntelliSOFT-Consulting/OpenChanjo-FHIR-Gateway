@@ -1,0 +1,103 @@
+{
+  "roles": [
+    "NURSE",
+    "ADMINISTRATOR",
+    "NATIONAL_SYSTEM_ADMINISTRATOR",
+    "SUB_COUNTY_STORE_MANAGER",
+    "SUB_COUNTY_SYSTEM_ADMINISTRATOR",
+    "DOCTOR",
+    "CLERK"
+  ],
+  "resources": {
+    "AdverseEvent": {
+      "create": ["NURSE"],
+      "update": ["NURSE"],
+      "delete": ["NURSE"],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "Appointment": {
+      "create": ["NURSE"],
+      "update": ["NURSE"],
+      "delete": ["NURSE"],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "AuditEvent": {
+      "create": ["SUB_COUNTY_STORE_MANAGER"],
+      "update": ["SUB_COUNTY_STORE_MANAGER"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER"],
+      "get": ["SUB_COUNTY_STORE_MANAGER"]
+    },
+    "Basic": {
+      "create": ["SUB_COUNTY_STORE_MANAGER"],
+      "update": ["SUB_COUNTY_STORE_MANAGER"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER"],
+      "get": ["SUB_COUNTY_STORE_MANAGER", "NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "CarePlan": {
+      "create": [],
+      "update": [],
+      "delete": [],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"]
+    },
+    "Immunization": {
+      "create": ["NURSE", "DOCTOR"],
+      "update": ["NURSE", "DOCTOR"],
+      "delete": ["NURSE", "DOCTOR"],
+      "get": ["NURSE", "DOCTOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "ImmunizationRecommendation": {
+      "create": ["NURSE", "DOCTOR"],
+      "update": ["NURSE", "DOCTOR"],
+      "delete": ["NURSE", "DOCTOR"],
+      "get": []
+    },
+    "Library": {
+      "create": ["SUB_COUNTY_STORE_MANAGER", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"],
+      "update": ["SUB_COUNTY_STORE_MANAGER", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"],
+      "get": ["SUB_COUNTY_STORE_MANAGER", "NURSE", "ADMINISTRATOR", "SUB_COUNTY_SYSTEM_ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "Location": {
+      "create": [],
+      "update": ["ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "delete": [],
+      "get": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "Observation": {
+      "create": ["NURSE"],
+      "update": ["NURSE"],
+      "delete": ["NURSE"],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "Parameters": {
+      "create": ["SUB_COUNTY_STORE_MANAGER", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "update": ["SUB_COUNTY_STORE_MANAGER", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "get": ["SUB_COUNTY_STORE_MANAGER", "NURSE", "ADMINISTRATOR", "SUB_COUNTY_SYSTEM_ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "Patient": {
+      "create": ["NURSE", "DOCTOR", "CLERK"],
+      "update": ["NURSE", "DOCTOR"],
+      "delete": ["NURSE", "DOCTOR"],
+      "get": []
+    },
+    "Practitioner": {
+      "create": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "update": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "delete": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],
+      "get": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "SupplyDelivery": {
+      "create": ["SUB_COUNTY_STORE_MANAGER"],
+      "update": ["SUB_COUNTY_STORE_MANAGER"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER"],
+      "get": ["SUB_COUNTY_STORE_MANAGER"]
+    },
+    "SupplyRequest": {
+      "create": ["SUB_COUNTY_STORE_MANAGER"],
+      "update": ["SUB_COUNTY_STORE_MANAGER"],
+      "delete": ["SUB_COUNTY_STORE_MANAGER"],
+      "get": ["SUB_COUNTY_STORE_MANAGER"]
+    }
+  }
+}
