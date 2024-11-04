@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceRoleLoader;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceValidatorFactory;
 import com.google.fhir.gateway.dynamic_validators.ValidatorService;
+import com.google.fhir.gateway.interfaces.RequestDetailsReader;
 import com.google.fhir.gateway.interfaces.ResourceValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -49,9 +50,6 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
   private String BASE_URL_FHIR = "chanjo-hapi/fhir/";
   private String BASE_URL_AUTH = "auth/";
-
-//  private final ResourceValidatorFactory validatorFactory = new ResourceValidatorFactory();
-
 
   private final DynamicResourceRoleLoader dynamicResourceRoleLoader = new DynamicResourceRoleLoader();
   private final DynamicResourceValidatorFactory dynamicResourceValidatorFactory =

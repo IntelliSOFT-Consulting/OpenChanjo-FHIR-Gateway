@@ -8,6 +8,24 @@
     "DOCTOR",
     "CLERK"
   ],
+  "availableResources": [
+    "AdverseEvent",
+    "Appointment",
+    "AuditEvent",
+    "Basic",
+    "CarePlan",
+    "Encounter",
+    "Immunization",
+    "ImmunizationRecommendation",
+    "Library",
+    "Location",
+    "Observation",
+    "Parameters",
+    "Patient",
+    "Practitioner",
+    "SupplyDelivery",
+    "SupplyRequest"
+  ],
   "resources": {
     "AdverseEvent": {
       "create": ["NURSE"],
@@ -32,6 +50,18 @@
       "update": ["SUB_COUNTY_STORE_MANAGER"],
       "delete": ["SUB_COUNTY_STORE_MANAGER"],
       "get": ["SUB_COUNTY_STORE_MANAGER", "NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+    },
+    "CarePlan": {
+      "create": [],
+      "update": [],
+      "delete": [],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"]
+    },
+    "Encounter": {
+      "create": ["NURSE"],
+      "update": ["NURSE"],
+      "delete": ["NURSE"],
+      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
     },
     "Immunization": {
       "create": ["NURSE", "DOCTOR"],
