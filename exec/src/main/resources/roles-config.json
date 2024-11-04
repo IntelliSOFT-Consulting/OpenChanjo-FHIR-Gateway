@@ -33,12 +33,6 @@
       "delete": ["SUB_COUNTY_STORE_MANAGER"],
       "get": ["SUB_COUNTY_STORE_MANAGER", "NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
     },
-    "CarePlan": {
-      "create": [],
-      "update": [],
-      "delete": [],
-      "get": ["NURSE", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"]
-    },
     "Immunization": {
       "create": ["NURSE", "DOCTOR"],
       "update": ["NURSE", "DOCTOR"],
@@ -49,7 +43,7 @@
       "create": ["NURSE", "DOCTOR"],
       "update": ["NURSE", "DOCTOR"],
       "delete": ["NURSE", "DOCTOR"],
-      "get": []
+      "get": ["NURSE", "DOCTOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
     },
     "Library": {
       "create": ["SUB_COUNTY_STORE_MANAGER", "SUB_COUNTY_SYSTEM_ADMINISTRATOR"],
@@ -79,7 +73,7 @@
       "create": ["NURSE", "DOCTOR", "CLERK"],
       "update": ["NURSE", "DOCTOR"],
       "delete": ["NURSE", "DOCTOR"],
-      "get": []
+      "get": ["NURSE", "DOCTOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR","SUB_COUNTY_SYSTEM_ADMINISTRATOR"]
     },
     "Practitioner": {
       "create": ["SUB_COUNTY_SYSTEM_ADMINISTRATOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"],

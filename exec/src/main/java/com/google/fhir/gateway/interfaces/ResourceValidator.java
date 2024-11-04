@@ -12,7 +12,7 @@ public interface ResourceValidator {
      * @param targetUrl the URL of the resource to be retrieved.
      * @return a Call object that can be used to execute the request and obtain the resource.
      */
-    Call<Object> getResource(String role, String targetUrl);
+    Call<Object> getResource(String resource, String method, String role, String targetUrl);
 
     /**
      * Creates a new resource using the specified role, target URL, and request body.
@@ -22,7 +22,7 @@ public interface ResourceValidator {
      * @param requestBody the HTTP request body containing the resource data.
      * @return a Call object that can be used to execute the request and create the resource.
      */
-    Call<Object> createResource(String role, String targetUrl, HttpServletRequest requestBody);
+    Call<Object> createResource(String resource, String method, String role, String targetUrl, HttpServletRequest requestBody);
 
     /**
      * Updates an existing resource using the specified role, target URL, and request body.
@@ -32,7 +32,7 @@ public interface ResourceValidator {
      * @param requestBody the HTTP request body containing the updated resource data.
      * @return a Call object that can be used to execute the request and update the resource.
      */
-    Call<Object> updateResource(String role, String targetUrl, HttpServletRequest requestBody);
+    Call<Object> updateResource(String resource, String method, String role, String targetUrl, HttpServletRequest requestBody);
 
     /**
      * Deletes a resource based on the specified role and target URL.
@@ -41,6 +41,6 @@ public interface ResourceValidator {
      * @param targetUrl the URL of the resource to be deleted.
      * @return a Call object that can be used to execute the request and delete the resource.
      */
-    Call<Object> deleteResource(String role, String targetUrl);
+    Call<Object> deleteResource(String resource, String method, String role, String targetUrl);
 }
 

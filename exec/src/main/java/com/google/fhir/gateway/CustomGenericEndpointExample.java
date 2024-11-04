@@ -23,8 +23,10 @@ import java.util.Enumeration;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.fhir.gateway.dynamic_validators.DynamicResourceRoleLoader;
+import com.google.fhir.gateway.dynamic_validators.DynamicResourceValidatorFactory;
+import com.google.fhir.gateway.dynamic_validators.ValidatorService;
 import com.google.fhir.gateway.interfaces.ResourceValidator;
-import com.google.fhir.gateway.validators.ResourceValidatorFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,7 +50,13 @@ public class CustomGenericEndpointExample extends HttpServlet {
   private String BASE_URL_FHIR = "chanjo-hapi/fhir/";
   private String BASE_URL_AUTH = "auth/";
 
-  private final ResourceValidatorFactory validatorFactory = new ResourceValidatorFactory();
+//  private final ResourceValidatorFactory validatorFactory = new ResourceValidatorFactory();
+
+
+  private final DynamicResourceRoleLoader dynamicResourceRoleLoader = new DynamicResourceRoleLoader();
+  private final DynamicResourceValidatorFactory dynamicResourceValidatorFactory =
+          new DynamicResourceValidatorFactory(dynamicResourceRoleLoader);
+  private final ValidatorService validatorService = new ValidatorService(dynamicResourceValidatorFactory);
 
 
     /**
@@ -59,7 +67,7 @@ public class CustomGenericEndpointExample extends HttpServlet {
    *                     or FHIR client from environment variables.
    */
   public CustomGenericEndpointExample() throws IOException {
-    this.tokenVerifier = TokenVerifier.createFromEnvVars();
+      this.tokenVerifier = TokenVerifier.createFromEnvVars();
     this.fhirClient = FhirClientFactory.createFhirClientFromEnvVars();
   }
 
@@ -143,62 +151,53 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
           String resourceType = path.split("/")[0];
 
-          ResourceValidator resourceValidator = validatorFactory.getValidator(resourceType);
+          Call<Object> call = null;
+          switch (method) {
+            case "GET":
+              call = validatorService.getResource(resourceType, method, practitionerRole, targetUrl);
+              break;
+            case "POST":
+              call = validatorService.createResource(resourceType, method, practitionerRole, targetUrl, req);
+              break;
+            case "PUT":
+              call = validatorService.updateResource(resourceType, method, practitionerRole, targetUrl, req);
+              break;
+            case "DELETE":
+              call = validatorService.deleteResource(resourceType, method, practitionerRole, targetUrl);
+              break;
+            default:
+          }
 
-          if (resourceValidator != null){
+          if (call == null) {
+            statusCode = HttpServletResponse.SC_FORBIDDEN;
+            String responseString = "You do not have access to this resource.";
+            dbResults = new DbResults(responseString);
+          }else {
 
-            Call<Object> call = null;
-            switch (method) {
-              case "GET":
-                call = resourceValidator.getResource(practitionerRole, targetUrl);
-                break;
-              case "POST":
-                call = resourceValidator.createResource(practitionerRole, targetUrl, req);
-                break;
-              case "PUT":
-                call = resourceValidator.updateResource(practitionerRole, targetUrl, req);
-                break;
-              case "DELETE":
-                call = resourceValidator.deleteResource(practitionerRole, targetUrl);
-                break;
-              default:
-            }
+            Response<Object> response = call.execute();
+            int statusCodeRes = response.code();
 
-            if (call == null) {
-              statusCode = HttpServletResponse.SC_FORBIDDEN;
-              String responseString = "You do not have access to this resource.";
-              dbResults = new DbResults(responseString);
-            }else {
+            if (response.isSuccessful()) {
+              statusCode = HttpServletResponse.SC_OK;
+              dbResults = new DbResults(response.body());
 
-              Response<Object> response = call.execute();
-              int statusCodeRes = response.code();
+            } else {
 
-              if (response.isSuccessful()) {
-                statusCode = HttpServletResponse.SC_OK;
-                dbResults = new DbResults(response.body());
+              if (statusCodeRes == 404){
 
-              } else {
+                statusCode = HttpServletResponse.SC_NOT_FOUND;
+                String responseString = "Resource not found";
+                dbResults = new DbResults(responseString);
 
-                if (statusCodeRes == 404){
+              }else {
 
-                  statusCode = HttpServletResponse.SC_NOT_FOUND;
-                  String responseString = "Resource not found";
-                  dbResults = new DbResults(responseString);
-
-                }else {
-
-                  String responseString = "Check the request and try again";
-                  dbResults = new DbResults(responseString);
-
-                }
+                String responseString = "Check the request and try again";
+                dbResults = new DbResults(responseString);
 
               }
 
             }
 
-          }else {
-            String responseString =  "Check the request and try again";
-            dbResults = new DbResults(responseString);
           }
 
         }catch (Exception e){

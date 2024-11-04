@@ -34,23 +34,3 @@ data class DbUser(
     val countryName: String
 )
 
-enum class FHIRResourceTypesData {
-    PATIENT,
-    IMMUNIZATION,
-    IMMUNIZATION_RECOMMENDATION,
-    BASIC,
-    ORDER
-}
-
-enum class OpenChanjoRoles {
-    NURSE,
-    DOCTOR,
-    CLERK,
-    FACILITY_SYSTEM_ADMINISTRATOR,
-    ADMINISTRATOR,
-    NATIONAL_SYSTEM_ADMINISTRATOR,
-    CLIENT,
-    PRACTITIONER,
-    SUB_COUNTY_STORE_MANAGER,
-    SUB_COUNTY_SYSTEM_ADMINISTRATOR
-}
