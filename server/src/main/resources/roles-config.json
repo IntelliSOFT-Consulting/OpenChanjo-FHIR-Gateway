@@ -3,7 +3,8 @@
     "platform": "LIVE",
     "url": "https://openchanjotest.intellisoftkenya.com/",
     "fhir": "chanjo-hapi/fhir/",
-    "auth": "auth/provider/me"
+    "auth": "auth/provider/me",
+    "tokenProvider": "https://keycloak.intellisoftkenya.com/realms/master"
   },
   "roles": [
     "NURSE",

@@ -25,6 +25,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.fhir.gateway.json_file.ConfigService;
+import com.google.fhir.gateway.json_file.RolesConfig;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
@@ -52,8 +54,6 @@ public class TokenVerifier {
   private static final String TOKEN_ISSUER_ENV = "TOKEN_ISSUER";
   private static final String WELL_KNOWN_ENDPOINT_ENV = "WELL_KNOWN_ENDPOINT";
   private static final String WELL_KNOWN_ENDPOINT_DEFAULT = ".well-known/openid-configuration";
-
-  private static final String TOKEN_ISSUER = "https://keycloak.intellisoftkenya.com/realms/master";
 
   private static final String BEARER_PREFIX = "Bearer ";
 
@@ -98,7 +98,12 @@ public class TokenVerifier {
 //              "The environment variable %s is not set! Using default value of %s instead ",
 //              WELL_KNOWN_ENDPOINT_ENV, WELL_KNOWN_ENDPOINT_DEFAULT));
 //    }
-    return new TokenVerifier(TOKEN_ISSUER, WELL_KNOWN_ENDPOINT_DEFAULT, new HttpUtil());
+    ConfigService configService = new ConfigService();
+
+    RolesConfig.BaseUrl baseUrl = configService.printBaseUrl("baseUrl");
+    String tokenProvider = baseUrl.getTokenProvider();
+
+    return new TokenVerifier(tokenProvider, WELL_KNOWN_ENDPOINT_DEFAULT, new HttpUtil());
   }
 
   public String getWellKnownConfig() {

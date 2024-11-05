@@ -16,18 +16,30 @@
 package com.google.fhir.gateway;
 
 import com.google.fhir.gateway.GenericFhirClient.GenericFhirClientBuilder;
+import com.google.fhir.gateway.json_file.ConfigService;
+import com.google.fhir.gateway.json_file.RolesConfig;
+
 import java.io.IOException;
 
 /**
  * This is a helper class to create appropriate FHIR clients to talk to the configured FHIR server.
  */
 public class FhirClientFactory {
+
   private static final String PROXY_TO_ENV = "PROXY_TO";
   private static final String BACKEND_TYPE_ENV = "BACKEND_TYPE";
 
+
   public static HttpFhirClient createFhirClientFromEnvVars() throws IOException {
     String backendType = "HAPI";
-    String fhirStore = "https://openchanjotest.intellisoftkenya.com/chanjo-hapi/fhir";
+
+    ConfigService configService = new ConfigService();
+
+    RolesConfig.BaseUrl baseUrl = configService.printBaseUrl("baseUrl");
+    String url = baseUrl.getUrl();
+    String fhirUrl = baseUrl.getFhir();
+
+    String fhirStore = url + fhirUrl;
 //    String backendType = System.getenv(BACKEND_TYPE_ENV);
 //    if (backendType == null) {
 //      throw new IllegalArgumentException(

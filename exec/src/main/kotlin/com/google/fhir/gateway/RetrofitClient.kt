@@ -1,6 +1,7 @@
 package com.google.fhir.gateway
 
-import com.google.fhir.gateway.RolesConfig.BaseUrl
+import com.google.fhir.gateway.json_file.ConfigService
+import com.google.fhir.gateway.json_file.RolesConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -14,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitClient {
 
     private val configService = ConfigService()
-    var urlBaseUrl: BaseUrl? = configService.printBaseUrl("baseUrl")
+    var urlBaseUrl: RolesConfig.BaseUrl? = configService.printBaseUrl("baseUrl")
     val baseUrl: String = urlBaseUrl?.url ?: "https://openchanjotest.intellisoftkenya.com/"
 
     val retrofit: Retrofit = Retrofit.Builder()
