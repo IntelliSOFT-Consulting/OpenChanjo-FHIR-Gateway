@@ -51,8 +51,9 @@ interface ApiService {
      * @param token The Bearer token used for authorization.
      * @return A [Call] object that can be used to request the provider information, returning a [UserResponse].
      */
-    @GET("auth/provider/me")
+    @GET
     fun getProviderInfo(
+        @Url url: String,
         @Header("Authorization") token: String,
     ): Call<UserResponse>
 }

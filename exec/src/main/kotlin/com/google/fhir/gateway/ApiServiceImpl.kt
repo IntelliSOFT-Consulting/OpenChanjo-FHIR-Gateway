@@ -54,7 +54,7 @@ class ApiServiceImpl : ApiService{
      * @param token The token used to authenticate the request for provider information.
      * @return A [Call] object that can be used to request the provider information.
      */
-    override fun getProviderInfo(token: String): Call<UserResponse> {
-        return apiService.getProviderInfo(token)
+    override fun getProviderInfo(url: String, token: String): Call<UserResponse> {
+        return apiService.getProviderInfo(url, token)
     }
 }

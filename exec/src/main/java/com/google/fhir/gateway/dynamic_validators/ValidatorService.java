@@ -44,9 +44,6 @@ public class ValidatorService implements AccessChecker, ResourceValidator {
     @Override
     public AccessDecision checkAccess(RequestDetailsReader requestDetails) {
 
-        System.out.println("-----?");
-        System.out.println("requestDetails = " + requestDetails);
-        System.out.println("-----?");
 
         return null;
     }

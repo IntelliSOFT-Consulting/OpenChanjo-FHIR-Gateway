@@ -26,6 +26,7 @@ public class DynamicResourceRoleLoader {
         this.resourcesNode = rootNode.path("resources");
     }
 
+
     // Method to fetch roles for a given resource and operation (create, update, delete, get)
     public Set<String> getRolesForOperation(String resourceName, String operation) {
         Set<String> roles = new HashSet<>();

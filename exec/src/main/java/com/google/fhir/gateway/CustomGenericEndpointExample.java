@@ -15,19 +15,12 @@
  */
 package com.google.fhir.gateway;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.util.Enumeration;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceRoleLoader;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceValidatorFactory;
 import com.google.fhir.gateway.dynamic_validators.ValidatorService;
-import com.google.fhir.gateway.interfaces.RequestDetailsReader;
-import com.google.fhir.gateway.interfaces.ResourceValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,14 +41,15 @@ public class CustomGenericEndpointExample extends HttpServlet {
   private final TokenVerifier tokenVerifier;
   private final HttpFhirClient fhirClient;
 
-  private String BASE_URL_FHIR = "chanjo-hapi/fhir/";
-  private String BASE_URL_AUTH = "auth/";
+//  private String BASE_URL_FHIR = "chanjo-hapi/fhir/";
+//  private String BASE_URL_AUTH = "auth/";
 
   private final DynamicResourceRoleLoader dynamicResourceRoleLoader = new DynamicResourceRoleLoader();
   private final DynamicResourceValidatorFactory dynamicResourceValidatorFactory =
           new DynamicResourceValidatorFactory(dynamicResourceRoleLoader);
   private final ValidatorService validatorService = new ValidatorService(dynamicResourceValidatorFactory);
 
+  private final ConfigService configService = new ConfigService();
 
     /**
    * Constructs a new instance of the CustomGenericEndpointExample servlet.
@@ -110,6 +104,8 @@ public class CustomGenericEndpointExample extends HttpServlet {
     DbResults dbResults = null;
     int statusCode = HttpServletResponse.SC_BAD_REQUEST;
 
+    RolesConfig.BaseUrl baseUrl = configService.printBaseUrl("baseUrl");
+
     // Check the Bearer token to be a valid JWT with required claims.
     String authHeader = req.getHeader("Authorization");
     if (authHeader == null) {
@@ -126,7 +122,8 @@ public class CustomGenericEndpointExample extends HttpServlet {
         e.printStackTrace();
       }
 
-      DbUser dbUser = getProviderInfoFromJwt(authHeader);
+      String authUrl = baseUrl.getAuth();
+      DbUser dbUser = getProviderInfoFromJwt(authUrl, authHeader);
       if (dbUser == null) {
         statusCode = HttpServletResponse.SC_UNAUTHORIZED;
         String responseString = "Invalid or expired JWT.";
@@ -143,9 +140,11 @@ public class CustomGenericEndpointExample extends HttpServlet {
 
         try{
 
+          String baseUrlFhir = baseUrl.getFhir();
+
           String path = req.getRequestURI().substring(req.getContextPath().length() + "/chanjo-gateway/".length());
           String queryString = req.getQueryString() != null ? "?" + req.getQueryString() : "";
-          String targetUrl = BASE_URL_FHIR + path + queryString;
+          String targetUrl = baseUrlFhir + path + queryString;
 
           String resourceType = path.split("/")[0];
 
@@ -228,10 +227,15 @@ public class CustomGenericEndpointExample extends HttpServlet {
    * @return a DbUser object containing the user details if the call is successful and the status is "success";
    *         otherwise, returns null.
    */
-  private DbUser getProviderInfoFromJwt(String jwt) {
+  private DbUser getProviderInfoFromJwt(String url, String jwt) {
 
     try{
-      Call<UserResponse> call = apiService.getProviderInfo(jwt);
+
+      if (url == null || jwt == null){
+        return null;
+      }
+
+      Call<UserResponse> call = apiService.getProviderInfo(url, jwt);
       Response<UserResponse> response = call.execute();
       if (response.isSuccessful()) {
         UserResponse userResponse = response.body();

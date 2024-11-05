@@ -1,4 +1,10 @@
 {
+  "baseUrl": {
+    "platform": "LIVE",
+    "url": "https://openchanjotest.intellisoftkenya.com/",
+    "fhir": "chanjo-hapi/fhir/",
+    "auth": "auth/provider/me"
+  },
   "roles": [
     "NURSE",
     "ADMINISTRATOR",
