@@ -13,46 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.fhir.gateway.dynamic_validators;
+package com.google.fhir.gateway.json_file;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 
-public class DynamicResourceRoleLoader {
+@Service
+public class ConfigService {
 
-    private final JsonNode resourcesNode;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public DynamicResourceRoleLoader() throws IOException {
+    private JsonNode loadRolesConfig(String key) throws IOException {
         // Load the JSON file from the classpath
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("roles-config.json");
         if (inputStream == null) {
             throw new IOException("Could not find 'roles-config.json' in the classpath.");
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(inputStream);
-        this.resourcesNode = rootNode.path("resources");
+        return rootNode.path(key);
     }
 
+    public RolesConfig.BaseUrl printBaseUrl(String key) throws IOException {
+        JsonNode rolesConfig = loadRolesConfig(key);
 
-    // Method to fetch roles for a given resource and operation (create, update, delete, get)
-    public Set<String> getRolesForOperation(String resourceName, String operation) {
-        Set<String> roles = new HashSet<>();
-        JsonNode resourceNode = resourcesNode.path(resourceName);
-        if (!resourceNode.isMissingNode()) {
-            JsonNode operationNode = resourceNode.path(operation);
-            if (operationNode.isArray()) {
-                for (JsonNode roleNode : operationNode) {
-                    roles.add(roleNode.asText());
-                }
-            }
+        // Convert the JsonNode to JSON string
+        String json = objectMapper.writeValueAsString(rolesConfig);
+
+        // Convert the JSON string back to a RolesConfig.BaseUrl object
+        if ("baseUrl".equals(key)) {
+            return objectMapper.readValue(json, RolesConfig.BaseUrl.class);
         }
-        return roles;
+        return null;
     }
 }
-

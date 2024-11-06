@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Google LLC
+ * Copyright 2021-2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,15 @@ package com.google.fhir.gateway;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.fhir.gateway.dtos.DbResults;
+import com.google.fhir.gateway.dtos.DbUser;
+import com.google.fhir.gateway.dtos.UserResponse;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceRoleLoader;
 import com.google.fhir.gateway.dynamic_validators.DynamicResourceValidatorFactory;
 import com.google.fhir.gateway.dynamic_validators.ValidatorService;
 import com.google.fhir.gateway.json_file.ConfigService;
 import com.google.fhir.gateway.json_file.RolesConfig;
+import com.google.fhir.gateway.retrofit.ApiServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
