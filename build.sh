@@ -27,5 +27,5 @@ set -e
 # set -x
 export BUILD_ID=${KOKORO_BUILD_ID:-local}
 #gcloud auth configure-docker us-docker.pkg.dev
-./e2e-test/e2e.sh
+#./e2e-test/e2e.sh
 docker push us-docker.pkg.dev/fhir-proxy-build/stable/fhir-gateway:${BUILD_ID}

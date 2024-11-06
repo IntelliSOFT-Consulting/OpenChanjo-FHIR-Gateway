@@ -9,14 +9,15 @@ RUN npm cache clean -f && npm install -g n && n stable
 WORKDIR /app
 
 # Copy everything from the local repository to the container
-#COPY . .
+#COPY server/ ./server/
+#COPY plugins/ ./plugins/
+#COPY exec/ ./exec/
+#COPY coverage/ ./coverage/
+#COPY .github/ ./.github
+#COPY license-header.txt .
+#COPY pom.xml .
 
-COPY server/ ./server
-COPY plugins/ ./plugins
-COPY exec/ ./exec
-COPY coverage/ ./coverage
-COPY license-header.txt .
-COPY pom.xml .
+COPY . .
 
 # Build the project using Maven
 RUN mvn clean package -DskipTests
@@ -33,5 +34,8 @@ COPY --from=build /app/exec/target/fhir-gateway-exec.jar ./fhir-gateway-exec.jar
 # Expose the application port (adjust this based on your app's configuration)
 EXPOSE 8080
 
+#ENV TOKEN_ISSUER="https://keycloak.intellisoftkenya.com/realms/master"
+#ENV PROXY_TO="https://openchanjotest.intellisoftkenya.com/chanjo-hapi/fhir/"
+
 # Run the application
-ENTRYPOINT ["java", "-jar", "fhir-gateway-exec.jar"]
+ENTRYPOINT java -jar fhir-gateway-exec.jar --server.port=${PROXY_PORT}
