@@ -9,7 +9,14 @@ RUN npm cache clean -f && npm install -g n && n stable
 WORKDIR /app
 
 # Copy everything from the local repository to the container
-COPY . .
+#COPY . .
+
+COPY server/ ./server
+COPY plugins/ ./plugins
+COPY exec/ ./exec
+COPY coverage/ ./coverage
+COPY license-header.txt .
+COPY pom.xml .
 
 # Build the project using Maven
 RUN mvn clean package -DskipTests
