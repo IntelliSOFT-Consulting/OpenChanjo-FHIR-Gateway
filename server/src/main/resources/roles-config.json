@@ -1,6 +1,6 @@
 {
   "baseUrl": {
-    "platform": "LIVE",
+    "platform": "TESTING",
     "url": "https://openchanjotest.intellisoftkenya.com/",
     "fhir": "chanjo-hapi/fhir/",
     "auth": "auth/provider/me",
