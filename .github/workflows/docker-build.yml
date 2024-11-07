@@ -9,6 +9,11 @@ on:
     branches:
       - development
 
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+  REPOSITORY_NAME: openchanjo_gateway
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,11 +46,8 @@ jobs:
       # Step 5: Build and tag the Docker image
       - name: Build and tag Docker image
         run: |
-          DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-          DOCKERHUB_PASSWORD="${{ secrets.DOCKERHUB_PASSWORD }}"
-          REPOSITORY_NAME="openchanjo_gateway"
-          IMAGE_TAG="${DOCKERHUB_USERNAME}/${REPOSITORY_NAME}:${{ env.PLATFORM }}"
-          echo '${{ DOCKERHUB_PASSWORD }}' | docker login -u ${{ DOCKERHUB_USERNAME }} --password-stdin
+          IMAGE_TAG="${ env.DOCKERHUB_USERNAME }/${ env.REPOSITORY_NAME }:${{ env.PLATFORM }}"
+          echo '${{ env.DOCKERHUB_PASSWORD }}' | docker login -u ${{ env.DOCKERHUB_USERNAME }} --password-stdin
           docker buildx create --use --name workflowBuilder
           docker buildx build --platform=linux/amd64,linux/arm64 -t ${{ env.$IMAGE_TAG }} --push .
           docker logout
