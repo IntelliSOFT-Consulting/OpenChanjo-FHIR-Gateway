@@ -74,7 +74,7 @@
       "create": ["NURSE", "DOCTOR"],
       "update": ["NURSE", "DOCTOR"],
       "delete": ["NURSE", "DOCTOR"],
-      "get": ["NURSE", "DOCTOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR"]
+      "get": ["NURSE", "DOCTOR", "ADMINISTRATOR", "NATIONAL_SYSTEM_ADMINISTRATOR", "FACILITY_SYSTEM_ADMINISTRATOR"]
     },
     "ImmunizationRecommendation": {
       "create": ["NURSE", "DOCTOR"],
