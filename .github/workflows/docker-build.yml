@@ -49,5 +49,5 @@ jobs:
           IMAGE_TAG="${ env.DOCKERHUB_USERNAME }/${ env.REPOSITORY_NAME }:${{ env.PLATFORM }}"
           echo '${{ env.DOCKERHUB_PASSWORD }}' | docker login -u ${{ env.DOCKERHUB_USERNAME }} --password-stdin
           docker buildx create --use --name workflowBuilder
-          docker buildx build --platform=linux/amd64,linux/arm64 -t ${{ env.$IMAGE_TAG }} --push .
+          docker buildx build --platform=linux/amd64,linux/arm64 -t ${{ IMAGE_TAG }} --push .
           docker logout
