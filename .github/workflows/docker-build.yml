@@ -46,7 +46,7 @@ jobs:
       # Step 5: Build and tag the Docker image
       - name: Build and tag Docker image
         run: |
-          IMAGE_TAG="${ env.DOCKERHUB_USERNAME }/${ env.REPOSITORY_NAME }:${{ env.PLATFORM }}"
+          IMAGE_TAG="${ env.DOCKERHUB_USERNAME }/${ env.REPOSITORY_NAME }:${{ PLATFORM }}"
           echo '${{ env.DOCKERHUB_PASSWORD }}' | docker login -u ${{ env.DOCKERHUB_USERNAME }} --password-stdin
           docker buildx create --use --name workflowBuilder
           docker buildx build --platform=linux/amd64,linux/arm64 -t ${{ IMAGE_TAG }} --push .
